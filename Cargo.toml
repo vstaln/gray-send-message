@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2024"
 rust-version = "1.91"
 license = "MIT"
-description = "Queue external messages into the next agent turn (/tell, inbox file). Port of pi's send-user-message."
+description = "Queue external messages into the next agent turn"
 
 [[bin]]
 name = "gray-send-message"

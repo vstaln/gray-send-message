@@ -1,8 +1,5 @@
 //! gray-send-message — drop outside messages into the next agent turn.
 //!
-//! Port of pi's `send-user-message` (gray has no mid-turn user injection, so
-//! messages queue on disk and ride the next `agent/before_start`).
-//!
 //! - `/tell <text>` appends `{"ts","text"}` to `~/.gray/send-message/queue.jsonl`
 //!   and confirms via `host/say "queued: <text>"` (capability `host.say`; a
 //!   failed say never loses the queued message).

@@ -222,7 +222,7 @@ fn main() -> std::io::Result<()> {
     // `pending`; everything else queues for the work loop.
     let (work_tx, work_rx) = mpsc::channel::<Value>();
     let reader_pending = pending.clone();
-    let reader = std::thread::spawn(move || {
+    let _reader = std::thread::spawn(move || {
         let stdin = std::io::stdin();
         for line in stdin.lock().lines() {
             let Ok(line) = line else { break };
@@ -256,7 +256,8 @@ fn main() -> std::io::Result<()> {
             break;
         }
     }
-    let _ = reader.join();
+    // The reader thread is a detached stdin pump; returning from main
+    // ends the process with it, so there is nothing to join.
     Ok(())
 }
 

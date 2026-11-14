@@ -31,7 +31,7 @@ fn manifest() -> Value {
         "version": env!("CARGO_PKG_VERSION"),
         "protocol": "2.0",
         "tools": [],
-        "description": "queue",
+        "description": "queue external messages into the next turn",
         "commands": ["/tell"],
         "hooks": ["agent/before_start"],
         "capabilities": ["host.say"],

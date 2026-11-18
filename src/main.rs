@@ -33,6 +33,7 @@ fn manifest() -> Value {
         "tools": [],
         "description": "queue external messages into the next turn",
         "commands": ["/tell"],
+        "command_descriptions": {"/tell": "queue a message for the next turn"},
         "hooks": ["agent/before_start"],
         "capabilities": ["host.say"],
     })

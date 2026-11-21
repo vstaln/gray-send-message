@@ -84,7 +84,11 @@ fn line_text(line: &str) -> Option<String> {
         && let Some(s) = v.get("text").and_then(Value::as_str)
     {
         let s = s.trim();
-        return if s.is_empty() { None } else { Some(s.to_string()) };
+        return if s.is_empty() {
+            None
+        } else {
+            Some(s.to_string())
+        };
     }
     Some(t.to_string())
 }
@@ -138,10 +142,7 @@ fn run_command(argv: &[&str], say: &mut dyn FnMut(&str) -> Result<(), String>) -
 
 /// One request → `Some(reply)`, or `None` for notifications. The bool asks
 /// the loop to exit after writing the reply.
-fn handle(
-    req: &Value,
-    say: &mut dyn FnMut(&str) -> Result<(), String>,
-) -> (Option<Value>, bool) {
+fn handle(req: &Value, say: &mut dyn FnMut(&str) -> Result<(), String>) -> (Option<Value>, bool) {
     let id = req.get("id").cloned();
     let method = req.get("method").and_then(Value::as_str).unwrap_or("");
     let params = req.get("params").cloned().unwrap_or(Value::Null);
@@ -225,7 +226,9 @@ fn main() -> std::io::Result<()> {
         let stdin = std::io::stdin();
         for line in stdin.lock().lines() {
             let Ok(line) = line else { break };
-            let Ok(v) = serde_json::from_str::<Value>(&line) else { continue };
+            let Ok(v) = serde_json::from_str::<Value>(&line) else {
+                continue;
+            };
             if v.get("method").is_none() {
                 if let Some(id) = v.get("id").and_then(Value::as_str)
                     && let Some(tx) = reader_pending.lock().expect("pending").remove(id)
@@ -242,8 +245,14 @@ fn main() -> std::io::Result<()> {
 
     for req in work_rx {
         let mut say = |t: &str| {
-            host_call(&stdout, &pending, &counter, "host/say", json!({ "text": t }))
-                .map(|_| ())
+            host_call(
+                &stdout,
+                &pending,
+                &counter,
+                "host/say",
+                json!({ "text": t }),
+            )
+            .map(|_| ())
         };
         let (reply, exit) = handle(&req, &mut say);
         if let Some(reply) = reply {
@@ -286,7 +295,10 @@ mod tests {
 
     #[test]
     fn line_text_accepts_json_and_raw() {
-        assert_eq!(line_text(r#"{"ts":1,"text":"hi there"}"#).as_deref(), Some("hi there"));
+        assert_eq!(
+            line_text(r#"{"ts":1,"text":"hi there"}"#).as_deref(),
+            Some("hi there")
+        );
         assert_eq!(line_text("  raw line ").as_deref(), Some("raw line"));
         assert_eq!(line_text(""), None);
         assert_eq!(line_text(r#"{"text":"  "}"#), None);
